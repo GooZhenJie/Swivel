@@ -142,6 +142,8 @@ cat > "$APP_DIR/Contents/Info.plist" <<PLIST
     <true/>
     <key>SUFeedURL</key>
     <string>${SPARKLE_FEED_URL}</string>
+    <key>SUEnableAutomaticChecks</key>
+    <false/>
     <key>SUPublicEDKey</key>
     <string>${SPARKLE_PUBLIC_KEY}</string>
 </dict>
