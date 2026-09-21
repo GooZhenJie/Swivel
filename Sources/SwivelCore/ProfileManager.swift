@@ -167,6 +167,8 @@ final class ProfileManager {
     /// profile's state, unless a switch is in flight).
     var liveClaudeDir: URL { claudeDir }
 
+    var sessionMirrorRecord: SessionMirror.Record? { SessionMirror.loadRecord(home: home) }
+
     /// Snapshot of `Claude/` inside the given profile, or `nil` if the
     /// profile doesn't exist / hasn't been saved yet.
     func snapshotClaudeDir(for profile: String) -> URL? {
@@ -351,6 +353,9 @@ final class ProfileManager {
             progress("Restoring \(name)…")
             try restoreClaudeFolder(from: target)
             try setActiveProfile(name)
+
+            progress("Syncing Code sessions…")
+            SessionMirror.run(home: home)
 
             progress("Launching Claude…")
             ClaudeAppController.launch()

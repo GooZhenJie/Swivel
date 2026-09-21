@@ -59,6 +59,7 @@ final class SwivelViewModel: ObservableObject {
     @Published private(set) var serviceStatus: ClaudeStatusSnapshot?
     @Published private(set) var loginItemAvailable = false
     @Published private(set) var loginItemEnabled = false
+    @Published private(set) var sessionMirrorRecord: SessionMirror.Record?
     @Published var widgetVisible = false
     @Published var widgetAlwaysOnTop = false
     /// Opt-in: fetch live usage from claude.ai. Off by default. Persisted
@@ -97,6 +98,7 @@ final class SwivelViewModel: ObservableObject {
         serviceStatus = statusChecker.latest
         loginItemAvailable = LoginItemManager.isAvailable
         loginItemEnabled = LoginItemManager.isEnabled
+        sessionMirrorRecord = manager.sessionMirrorRecord
 
         // Carry the last-known usage forward into this first pass rather than
         // blanking it. Profile metadata (names/colors/active) still publishes

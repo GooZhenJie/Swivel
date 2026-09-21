@@ -41,6 +41,7 @@ struct PopoverRootView: View {
             }
 
             Divider().padding(.horizontal, 12)
+            sessionMirrorRow
             footer
         }
         .frame(width: popoverWidth)
@@ -191,6 +192,69 @@ struct PopoverRootView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
+    }
+
+    // MARK: - Session mirror
+
+    private var sessionMirrorRow: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "arrow.triangle.2.circlepath")
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(sessionMirrorColor)
+            Text(sessionMirrorText)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 14)
+        .padding(.top, 9)
+        .contentShape(Rectangle())
+        .help(sessionMirrorHelp)
+    }
+
+    private var sessionMirrorColor: Color {
+        switch model.sessionMirrorRecord?.outcome {
+        case .succeeded: return Color(.systemGreen)
+        case .failed, .timedOut: return Color(.systemOrange)
+        case .skipped, .none: return Color(.systemGray)
+        }
+    }
+
+    private var sessionMirrorText: String {
+        guard let record = model.sessionMirrorRecord else {
+            return "Code sync on · waiting for first switch"
+        }
+        let time = Self.sessionMirrorTime(record.at)
+        switch record.outcome {
+        case .succeeded:
+            let changes = record.changes
+            return "Code sync ✓ \(time) · \(changes.isEmpty ? "no changes" : changes.joined(separator: ", "))"
+        case .failed(let status):
+            return "Code sync failed \(time) · exit \(status)"
+        case .timedOut:
+            return "Code sync timed out \(time)"
+        case .skipped:
+            return "Code sync skipped · ~/bin/cc-mirror-sessions not found"
+        }
+    }
+
+    private var sessionMirrorHelp: String {
+        var lines = ["Merges Claude Code sidebar sessions across accounts on every switch (~/bin/cc-mirror-sessions)."]
+        if let record = model.sessionMirrorRecord {
+            lines.append("Last run: \(record.at.formatted(date: .abbreviated, time: .standard))")
+            if let summary = record.summary {
+                lines.append(summary)
+            }
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    private static func sessionMirrorTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = Calendar.current.isDateInToday(date) ? "HH:mm" : "M/d HH:mm"
+        return formatter.string(from: date)
     }
 
     // MARK: - Footer
