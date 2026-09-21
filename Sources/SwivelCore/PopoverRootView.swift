@@ -42,6 +42,7 @@ struct PopoverRootView: View {
 
             Divider().padding(.horizontal, 12)
             sessionMirrorRow
+            usageTrackerRow
             footer
         }
         .frame(width: popoverWidth)
@@ -255,6 +256,46 @@ struct PopoverRootView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = Calendar.current.isDateInToday(date) ? "HH:mm" : "M/d HH:mm"
         return formatter.string(from: date)
+    }
+
+    private var usageTrackerRow: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "gauge.with.needle")
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(usageTrackerColor)
+            Text(usageTrackerText)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 14)
+        .padding(.top, 3)
+        .contentShape(Rectangle())
+        .help("Points Claude Usage at the profile of the same name on every switch. Override the pairing in ~/Library/Application Support/Swivel/usage-profile-map.json")
+    }
+
+    private var usageTrackerColor: Color {
+        switch model.usageTrackerRecord?.outcome {
+        case .switched, .alreadyActive: return Color(.systemGreen)
+        case .noMatch, .failed: return Color(.systemOrange)
+        case .notInstalled, .none: return Color(.systemGray)
+        }
+    }
+
+    private var usageTrackerText: String {
+        guard let record = model.usageTrackerRecord else {
+            return "Usage tracker on · waiting for first switch"
+        }
+        let time = Self.sessionMirrorTime(record.at)
+        switch record.outcome {
+        case .switched(let name): return "Usage tracker → \(name) \(time)"
+        case .alreadyActive(let name): return "Usage tracker already on \(name) \(time)"
+        case .noMatch(let name): return "Usage tracker has no profile named \(name)"
+        case .failed(let reason): return "Usage tracker failed \(time) · \(reason)"
+        case .notInstalled: return "Usage tracker not installed"
+        }
     }
 
     // MARK: - Footer

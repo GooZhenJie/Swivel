@@ -169,6 +169,8 @@ final class ProfileManager {
 
     var sessionMirrorRecord: SessionMirror.Record? { SessionMirror.loadRecord(home: home) }
 
+    var usageTrackerRecord: UsageTrackerSync.Record? { UsageTrackerSync.loadRecord(home: home) }
+
     /// Snapshot of `Claude/` inside the given profile, or `nil` if the
     /// profile doesn't exist / hasn't been saved yet.
     func snapshotClaudeDir(for profile: String) -> URL? {
@@ -359,6 +361,9 @@ final class ProfileManager {
 
             progress("Launching Claude…")
             ClaudeAppController.launch()
+
+            progress("Syncing usage tracker…")
+            UsageTrackerSync.activate(swivelProfile: name, home: home)
         }
     }
 
