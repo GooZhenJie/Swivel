@@ -120,8 +120,12 @@ one, and never trigger a switch unprompted.
 - Commit messages follow Conventional Commits as specified in
   `/Volumes/T9/Documents/www/rasa-projects/.cursorrules`; read that file before writing one.
 - No code comments unless the owner explicitly asks for them.
-- Confirm before side effects: deploys, pushes, installs over the running app, and anything touching
-  another app's data.
+- Agents commit and push their own changes to `origin feature/auto-mirror-on-switch` without asking
+  (owner's standing approval, 2026-11-02; the full rule is
+  `/Volumes/T9/Documents/www/agent-configs/shared/common/rules/agent-configs-auto-commit.mdc`).
+  Never commit to or push `main`, never force-push; `swivel-update --push` is run by the owner only.
+- Confirm before any other side effect: installs over the running app, merging upstream, deploys,
+  and anything touching another app's data.
 
 ## Related
 
