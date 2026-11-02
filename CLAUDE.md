@@ -127,3 +127,8 @@ one, and never trigger a switch unprompted.
 
 `/Volumes/T9/Documents/www/cc-mirror-sessions` — the mirror script this fork calls. It has its own
 `CLAUDE.md`; read it before changing anything about the mirror behavior.
+
+"Something about a session does not follow me when I switch accounts" (pin, archive, title, model,
+status) is fixed in that script's step 1.6, **not in Swivel** — Swivel only runs the script and
+shows its summary line. The field-by-field sync rules and the list of fields that must stay per
+account are in that repo's `CLAUDE.md`.
