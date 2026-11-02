@@ -118,7 +118,8 @@ one, and never trigger a switch unprompted.
   must be dropped, and `CONTRIBUTING.md` requires one change per PR plus a manual test plan.
 - No AI attribution in commit messages, no `Co-Authored-By: Claude`, no "Generated with" footers.
 - Commit messages follow Conventional Commits as specified in
-  `/Volumes/T9/Documents/www/rasa-projects/.cursorrules`; read that file before writing one.
+  `/Volumes/T9/Documents/www/agent-configs/shared/rasa/rules/git-commit-message.mdc`; read that
+  file before writing one.
 - No code comments unless the owner explicitly asks for them.
 - Agents commit and push their own changes to `origin feature/auto-mirror-on-switch` without asking
   (owner's standing approval, 2026-11-02; the full rule is
